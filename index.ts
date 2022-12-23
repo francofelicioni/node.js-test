@@ -1,19 +1,23 @@
 const fs = require("fs");
 
-const data = fs
+const data: string = fs
   .readFileSync("./countries.txt", { encoding: "utf8", flag: "r" })
   .replace(/,/g, "");
-const newData = data.split(/\r?\n/);
+const newData: string[] = data.split(/\r?\n/);
 let title = newData.shift();
 
-const singleCountriesInfo = newData.map((data) => data.split(" "));
+const singleCountriesInfo: string[][] = newData.map((data: string) =>
+  data.split(" ")
+);
 
-const finalArray = [["Country", "Population", "Area", "Population Density"]];
+const finalArray: (string | number)[][] = [
+  ["Country", "Population", "Area", "Population Density"],
+];
 
 for (let index = 0; index < singleCountriesInfo.length - 1; index++) {
-  const element = singleCountriesInfo[index];
+  const element: (any)[] = singleCountriesInfo[index];
 
-  let name = "";
+  let name: string = "";
 
   for (let i = 0; i < element.length; i++) {
     if (isNaN(element[i])) {
@@ -21,7 +25,7 @@ for (let index = 0; index < singleCountriesInfo.length - 1; index++) {
     }
   }
 
-  let population;
+  let population: number;
 
   if (element[element.length - 2] === "1") {
     population = parseInt(element[element.length - 3]);
@@ -29,7 +33,7 @@ for (let index = 0; index < singleCountriesInfo.length - 1; index++) {
     population = parseInt(element[element.length - 2]);
   }
 
-  let area;
+  let area: number;
 
   if (element[element.length - 1] === "1") {
     area = parseInt(element[element.length - 2]);
@@ -37,8 +41,8 @@ for (let index = 0; index < singleCountriesInfo.length - 1; index++) {
     area = parseInt(element[element.length - 1]);
   }
 
-  let pd;
-  let pdmi = "";
+  let pd: string | undefined;
+  let pdmi: string = '';
 
   if (!isNaN(population) && !isNaN(area)) {
     pd = (population / area).toFixed(2);
@@ -51,9 +55,13 @@ for (let index = 0; index < singleCountriesInfo.length - 1; index++) {
 
 for (let index = 1; index < finalArray.length; index++) {
   const element = finalArray[index];
-  finalArray.sort((a, b) => b[element.length - 1] - a[element.length - 1]);
+  finalArray.sort(
+    (a: any, b: any) => b[element.length - 1] - a[element.length - 1]
+  );
 }
 
-const cadena = finalArray.map((country) => (country).join(' - ')  + '\n').join('\n');
+const cadena = finalArray
+  .map((country) => country.join(" - ") + "\n")
+  .join("\n");
 
 fs.writeFileSync("countries.csv", cadena);
